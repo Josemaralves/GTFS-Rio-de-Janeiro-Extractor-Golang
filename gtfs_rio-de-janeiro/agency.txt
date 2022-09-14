@@ -1,0 +1,5 @@
+agency_id,agency_name,agency_url,agency_timezone,agency_lang
+22002,Intersul,http://www.rioonibus.com/,America/Sao_Paulo,pt
+22003,Internorte,http://www.rioonibus.com/,America/Sao_Paulo,pt
+22004,Transcarioca,http://www.rioonibus.com/,America/Sao_Paulo,pt
+22005,Santa Cruz,http://www.rioonibus.com/,America/Sao_Paulo,pt
