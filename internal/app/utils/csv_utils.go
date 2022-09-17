@@ -14,6 +14,7 @@ func ReadCsvFile(filePath string) [][]string {
 	defer f.Close()
 
 	csvReader := csv.NewReader(f)
+	csvReader.Read()
 	records, err := csvReader.ReadAll()
 	if err != nil {
 		log.Fatal("Unable to parse file as CSV for "+filePath, err)

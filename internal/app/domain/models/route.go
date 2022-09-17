@@ -1,17 +1,25 @@
 package models
 
-type Route struct {
-	IdRoute, LongName, ShortName, AgencyId, AgencyName string
+type Lines struct {
+	IdRoute     string      `bson:"idRoute"`
+	LongName    string      `bson:"longName"`
+	ShortName   string      `bson:"shortName"`
+	AgencyId    string      `bson:"agencyId"`
+	AgencyName  string      `bson:"agencyName"`
+	Itineraries []Itinerary `bson:"itineraries"`
+	Stops       []string    `bson:"stops"`
 }
 
-func ToRoutes(routesCsv [][]string, agency map[string]string) (routes []Route) {
+func ToLines(routesCsv [][]string, agency map[string]string, shapes map[string][]Itinerary, times map[string][]string) (routes []Lines) {
 	for _, r := range routesCsv {
-		route := Route{
-			IdRoute:    r[5],
-			LongName:   r[6],
-			ShortName:  r[1],
-			AgencyId:   r[0],
-			AgencyName: agency[r[0]],
+		route := Lines{
+			IdRoute:     r[5],
+			LongName:    r[6],
+			ShortName:   r[1],
+			AgencyId:    r[0],
+			AgencyName:  agency[r[0]],
+			Itineraries: shapes[r[5]],
+			Stops:       times[r[5]],
 		}
 
 		routes = append(routes, route)

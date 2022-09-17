@@ -3,39 +3,33 @@ package repository
 import (
 	"context"
 	"github.com/josemaralves/gtfs-rio-de-janeiro-extractor-golang/internal/app/domain/models"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const URI = ""
-const Database = ""
-const Collection = ""
+const RoutesCollection = "lines"
 
 type RouteRepository struct {
 	collRoutes *mongo.Collection
 }
 
-func New() *RouteRepository {
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(URI))
-	if err != nil {
-		panic(err)
-	}
-
-	collRoutes := client.Database(Database).Collection(Collection)
+func NewRouteRepository(db *mongo.Database) *RouteRepository {
+	collRoutes := db.Collection(RoutesCollection)
 
 	return &RouteRepository{
 		collRoutes: collRoutes,
 	}
 }
 
-func (r *RouteRepository) InsertRoutes(routes []models.Route) {
-	var bulk []interface{}
+func (r *RouteRepository) InsertRoutes(routes []models.Lines) {
+	var bulk []mongo.WriteModel
 
 	for _, r := range routes {
-		bulk = append(bulk, r)
+		model := mongo.NewReplaceOneModel().SetFilter(bson.D{{"idRoute", r.IdRoute}}).SetReplacement(r).SetUpsert(true)
+		bulk = append(bulk, model)
 	}
 
-	_, err := r.collRoutes.InsertMany(context.Background(), bulk)
+	_, err := r.collRoutes.BulkWrite(context.Background(), bulk)
 
 	if err != nil {
 		panic(err)
